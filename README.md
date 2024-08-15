@@ -16,7 +16,7 @@ If you get hit by an alien bullet or the aliens reach the station, you lose a li
 3. Update the working directory line (*line 14*) to the location of these files. 
 4. Run *space_invaders.py*
 
-## Playing ##
+## Modifying ##
 Have fun and feel free to modify the parameters such as velocity or lives as you please. Screaming if you get hit by an alien is compulsory. 
 
 ![Pretty_Space_Invaders](https://github.com/user-attachments/assets/f5328254-894d-4c72-a293-ae5f177de90a)
