@@ -11,9 +11,9 @@ This game was created by following "The Art of Doing: Video Game Creation using 
 If you get hit by an alien bullet or the aliens reach the ship, you loose a life and the aliens will reset. You have 5 lives in total. If you clear all the aliens, you move onto the next round. 
 
 ## Installing ## 
-1. Ensure Python and Pygame are installed on your computer.
+1. Ensure *Python* and *Pygame* are installed on your computer.
 2. Download the *.wav*, *.png*, *.svg* files  into the same folder. I know the program is quite needy (just like me) and requires lots of files to run - but trust me, it'll be worth it.
-3. Update the working directory line to the location of these files. 
+3. Update the working directory line (*line 14*) to the location of these files. 
 4. Run space_invaders.py
 
 ## Playing ##
