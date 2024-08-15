@@ -1,5 +1,5 @@
 # Pretty-and-Pink-Space-Invaders
-A recreation of the classic Space Invaders Game using Pygame! This improved version features a gorgeous pink and purple colour scheme, epic sound effects (would reccommend full volume for maximum enjoyment) and dynamically moving cute aliens that get faster as the rounds progress. You need to defend well as the International Space Station is at stake. 
+A recreation of the classic Space Invaders Game using Pygame! This *Pretty-and-Pink* version features a gorgeous pink and purple colour scheme, epic sound effects (would reccommend full volume for maximum enjoyment) and dynamically moving cute aliens that get faster as the rounds progress. You need to defend well as the International Space Station is at stake. 
 
 This game was created by following "The Art of Doing: Video Game Creation using Python and Pygame" course by Michael Eramo. Excellent course! 
 
