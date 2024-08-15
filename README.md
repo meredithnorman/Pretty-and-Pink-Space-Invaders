@@ -14,7 +14,7 @@ If you get hit by an alien bullet or the aliens reach the station, you lose a li
 1. Ensure *Python* and *Pygame* are installed on your computer.
 2. Download the *.wav*, *.png*, *.svg* files  into the same folder. I know the program is quite needy (just like me) and requires lots of files to run - but trust me, it'll be worth it.
 3. Update the working directory line (*line 14*) to the location of these files. 
-4. Run space_invaders.py
+4. Run *space_invaders.py*
 
 ## Playing ##
 Have fun and feel free to modify the parameters such as velocity or lives as you please. Screaming if you get hit by an alien is compulsory. 
