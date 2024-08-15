@@ -13,7 +13,7 @@ If you get hit by an alien bullet or the aliens reach the ship, you loose a life
 ## Installing ## 
 1. Ensure Python and Pygame are installed on your computer.
 2. Download the *.wav*, *.png*, *.svg* files  into the same folder. I know the program is quite needy (just like me) and requires lots of files to run - but trust me, it'll be worth it.
-3. Update the working directory line to where these files are saved. 
+3. Update the working directory line to the location of these files. 
 4. Run space_invaders.py
 
 ## Playing ##
