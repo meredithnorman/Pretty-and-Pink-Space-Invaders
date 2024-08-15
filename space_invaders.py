@@ -11,7 +11,7 @@ pygame.display.set_caption("Space Invaders")
 
 # Setting the working directory
 import os
-os.chdir('C:/Users/Meredith Norman/Documents/Learning Visual Studio Python/Chapter 3 - Intermediate Pygame/Space_Invaders')
+os.chdir('Your Working Directory')
 
 #Set Frames per second and clock
 FPS=60
