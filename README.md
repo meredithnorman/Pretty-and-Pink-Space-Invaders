@@ -8,7 +8,9 @@ This game was created by following *"The Art of Doing: Video Game Creation using
 2. Use the &#8594; key to move the Space Station right.
 3. Use the *space* key to shoot a bullet at the aliens.
 
-If you get hit by an alien bullet or the aliens reach the station, you lose a life and the aliens will reset. You have 5 lives in total. If you clear all the aliens, you move onto the next round. 
+If you get hit by an alien bullet or the aliens reach the station, you lose a life and the aliens will reset. You have 5 lives in total. If you clear all the aliens, you move onto the next round.
+
+I wonder what the treasure chest contains?
 
 ## Installing ## 
 1. Ensure *Python* and *Pygame* are installed on your computer.
@@ -19,7 +21,6 @@ If you get hit by an alien bullet or the aliens reach the station, you lose a li
 ## Modifying ##
 Have fun and feel free to modify the parameters such as velocity or lives as you please. Screaming if you get hit by an alien is compulsory. 
 
-![Pretty_Space_Invaders](https://github.com/user-attachments/assets/f5328254-894d-4c72-a293-ae5f177de90a)
-
+![Pretty_Space_Invaders](screen_shot.png)
 
 
