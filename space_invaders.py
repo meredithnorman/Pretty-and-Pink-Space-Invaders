@@ -4,7 +4,7 @@ import pygame, random
 pygame.init()
 
 # Set display surface
-width = 1200
+width =1200
 height = 900
 display_surface = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Space Invaders")
@@ -12,7 +12,7 @@ pygame.display.set_caption("Space Invaders")
 # Setting the working directory
 import os
 
-# os.chdir('Your Working Directory')
+os.chdir('Your Working directory')
 
 # Set Frames per second and clock
 FPS = 60
@@ -37,6 +37,7 @@ class Game():
         self.alien_bullet_group = alien_bullet_group
         self.chest_bullet_group = chest_bullet_group
 
+
         # Set sounds and music
         self.new_round_sound = pygame.mixer.Sound("new_round.wav")
         self.breach_sound = pygame.mixer.Sound("breach.wav")  # i.e the aliens 'breach' the bounds of the screen
@@ -60,7 +61,7 @@ class Game():
         # Set text
         score_text = self.font.render("SCORE: " + str(self.score), True, white)
         score_rect = score_text.get_rect()
-        score_rect.centerx = width // 2  # put this in center top
+        score_rect.centerx = width // 3  # put this in center top
         score_rect.top = 10
 
         round_text = self.font.render("ROUND: " + str(self.round_number), True, white)
@@ -71,10 +72,15 @@ class Game():
         lives_rect = lives_text.get_rect()
         lives_rect.topright = (width - 20, 10)
 
+        accuracy_text = self.font.render("ACCURACY: " + str(self.player.accuracy)+ "%", True, white)
+        accuracy_rect = accuracy_text.get_rect()
+        accuracy_rect.topright = (width*0.7, 10)
+
         # Blitting the text to the display
         display_surface.blit(score_text, score_rect)
         display_surface.blit(round_text, round_rect)
         display_surface.blit(lives_text, lives_rect)
+        display_surface.blit(accuracy_text, accuracy_rect)
 
         pygame.draw.line(display_surface, white, (0, 50), (width, 50), 4)
         pygame.draw.line(display_surface, white, (0, height - 120), (width, height - 120), 4)
@@ -133,11 +139,15 @@ class Game():
                                       True):  # ie kill bullet and kill alien
             self.alien_hit_sound.play()
             self.score += 100
+            self.player.hits+=1
+            self.player.update_accuracy()
         elif pygame.sprite.groupcollide(self.player_bullet_group, self.chest_group, True,
                                         True):  # ie kill bullet and kill chest
             self.chest_hit_sound.play()
             self.score += 500
             self.player.boost = True
+            self.player.hits+=1
+            self.player.update_accuracy()
 
         # See if player has collided with any bullet in the alien bullet group
         if pygame.sprite.spritecollide(self.player, self.alien_bullet_group, True):
@@ -236,7 +246,7 @@ class Game():
 
     def reset_game(self):
         # reset the game
-        self.pause_game("Final Score: " + str(self.score),
+        self.pause_game("Final Score: " + str(self.score) + "     Accuracy of " + str(self.player.accuracy) + "%",
                         "Press 'Enter' to defend the International Space Station again!")
 
         # Reset game values
@@ -245,6 +255,9 @@ class Game():
         self.player.lives = 5
         self.player.boost = False
         self.player.boost_timer = FPS * 3
+        self.player.hits=0
+        self.player.accuracy=0.0
+        self.player.attempts=0
 
         # Empty groups
         self.alien_group.empty()
@@ -280,6 +293,11 @@ class Player(pygame.sprite.Sprite):  # use the sprite.Sprite as you have to inhe
         self.shoot_sound_boost = pygame.mixer.Sound("laser_fire.mp3")
         self.shoot_sound_normal = pygame.mixer.Sound("player_fire.wav")
 
+        self.accuracy=0.0
+        self.hits=0
+        self.attempts=0
+
+
     def update(self):
         # update the player
         keys = pygame.key.get_pressed()
@@ -297,6 +315,8 @@ class Player(pygame.sprite.Sprite):  # use the sprite.Sprite as you have to inhe
             self.boost_timer = FPS * BOOST_TIME_IN_SECS
 
     def fire(self):
+        self.attempts+=1
+        self.update_accuracy()
         # Fire a bullet
         if self.boost:
             self.shoot_sound_boost.play()
@@ -304,6 +324,12 @@ class Player(pygame.sprite.Sprite):  # use the sprite.Sprite as you have to inhe
             self.shoot_sound_normal.play()
         PlayerBullet(self.rect.centerx, self.rect.top, self.bullet_group,
                      self.boost)  # fire from the top of the ship. We are using the Player Bullet class and have to put in all the neccessary inputs.
+        
+    def update_accuracy(self):    #Making a function seemed like the easiest way to calculate and update accuracy
+        if self.attempts > 0:
+            self.accuracy = round((self.hits / self.attempts) * 100,1) 
+        else:
+            self.accuracy = 0   #make sure that you don't just get//0 
 
     def reset(self):
         # Reset the players position
@@ -333,14 +359,14 @@ class Alien(pygame.sprite.Sprite):  # use the sprite.Sprite as you have to inher
 
         self.shoot_sound = pygame.mixer.Sound("alien_fire.wav")
 
+        
     def update(self):
         # update the alien
         self.rect.x += self.direction * self.velocity  # ie left or right and then velocity
 
         # Randomly fire a bullet
-        if random.randint(0, 3000) > 2999 and len(
-                self.bullet_group) < 3:  # So the prob is 1/3000. This check happens 60 times a second and for every alien so it should end up being ample bullets.
-            self.shoot_sound.play()
+        if random.randint(0, 3000) > (2995)+0.06*len(my_alien_group) and len(my_alien_bullet_group) < 3:  
+            # When there are less aliens, the probability of shooting increases slightly. This probably isn't the most optimal way of doing it. I also make sure there are max 3 bullets at once fron the aliens. 
             self.fire()
 
     def fire(self):
