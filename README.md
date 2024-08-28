@@ -8,7 +8,9 @@ This game was created by following *"The Art of Doing: Video Game Creation using
 2. Use the &#8594; key to move the Space Station right.
 3. Use the *space* key to shoot a bullet at the aliens.
 
-If you get hit by an alien bullet or the aliens reach the station, you lose a life and the aliens will reset. You have 5 lives in total. If you clear all the aliens, you move onto the next round. The instantaneous accuracy is calculated everytime you shoot a bullet - you'll have to consider the accuracy and speed trade off when firing your bullets. 
+If you get hit by an alien bullet or the aliens reach the station, you lose a life and the aliens will reset. You have 5 lives in total. If you clear all the aliens, you move onto the next round. 
+
+The instantaneous accuracy is calculated everytime you shoot a bullet - you'll have to consider the accuracy and speed trade off when firing your bullets. 
 
 I wonder what the treasure chest contains? 
 
