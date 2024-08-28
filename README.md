@@ -21,6 +21,6 @@ I wonder what the treasure chest contains?
 ## Modifying ##
 Have fun and feel free to modify the parameters such as velocity or lives as you please. Screaming if you get hit by an alien is compulsory. 
 
-![Pretty_Space_Invaders](screen_shot.png)
+<img width="895" alt="image" src="https://github.com/user-attachments/assets/7f28b7de-3911-4eeb-aa80-a8e16ba6d1ee">
 
 
