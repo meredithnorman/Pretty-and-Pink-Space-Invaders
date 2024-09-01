@@ -12,7 +12,7 @@ pygame.display.set_caption("Space Invaders")
 # Setting the working directory
 import os
 
-os.chdir('C:/Users/Meredith/PycharmProjects/Space Invaders')
+os.chdir('Your working directory')
 
 # Set Frames per second and clock
 FPS = 60
