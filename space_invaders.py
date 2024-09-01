@@ -1,18 +1,16 @@
-import pygame, random, math
+import math
+import random
+
+import pygame
 
 # Initialise pygame
 pygame.init()
 
 # Set display surface
-width =1200
+width = 1200
 height = 900
 display_surface = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Space Invaders")
-
-# Setting the working directory
-import os
-
-os.chdir('Your working directory')
 
 # Set Frames per second and clock
 FPS = 60
@@ -25,7 +23,8 @@ BOOST_TIME_IN_SECS = 4
 class Game():
     # A class to help control and update gameplay
 
-    def __init__(self, player, alien_group, chest_group, love_heart_group, player_bullet_group, alien_bullet_group, chest_bullet_group, love_heart_bullet_group):
+    def __init__(self, player, alien_group, chest_group, love_heart_group, player_bullet_group, alien_bullet_group,
+                 chest_bullet_group, love_heart_bullet_group):
         # initialise the game
         # Set game values
         self.round_number = 1
@@ -33,12 +32,11 @@ class Game():
         self.player = player
         self.alien_group = alien_group
         self.chest_group = chest_group
-        self.love_heart_group=love_heart_group
+        self.love_heart_group = love_heart_group
         self.player_bullet_group = player_bullet_group
         self.alien_bullet_group = alien_bullet_group
         self.chest_bullet_group = chest_bullet_group
-        self.love_heart_bullet_group=love_heart_bullet_group
-
+        self.love_heart_bullet_group = love_heart_bullet_group
 
         # Set sounds and music
         self.new_round_sound = pygame.mixer.Sound("new_round.wav")
@@ -46,7 +44,7 @@ class Game():
         self.alien_hit_sound = pygame.mixer.Sound("alien_hit.wav")
         self.player_hit_sound = pygame.mixer.Sound("player_hit.wav")
         self.chest_hit_sound = pygame.mixer.Sound("bonus_acquired.wav")
-        self.heart_hit_sound=pygame.mixer.Sound("heart_wav.wav")
+        self.heart_hit_sound = pygame.mixer.Sound("heart_wav.wav")
 
         # Set font
         self.font = pygame.font.SysFont('candara', 32, bold=10)
@@ -75,9 +73,9 @@ class Game():
         lives_rect = lives_text.get_rect()
         lives_rect.topright = (width - 20, 10)
 
-        accuracy_text = self.font.render("ACCURACY: " + str(self.player.accuracy)+ "%", True, white)
+        accuracy_text = self.font.render("ACCURACY: " + str(self.player.accuracy) + "%", True, white)
         accuracy_rect = accuracy_text.get_rect()
-        accuracy_rect.topright = (width*0.7, 10)
+        accuracy_rect.topright = (width * 0.7, 10)
 
         # Blitting the text to the display
         display_surface.blit(score_text, score_rect)
@@ -135,10 +133,6 @@ class Game():
             if chest.rect.bottom >= height - 50:
                 chest.kill()
 
-    
-    
-    
-
     def check_collisions(self):
         # check for collisions
         # See if any bullet in the player bullet group hits an alien in the alien group
@@ -146,24 +140,22 @@ class Game():
                                       True):  # ie kill bullet and kill alien
             self.alien_hit_sound.play()
             self.score += 100
-            self.player.hits+=1
+            self.player.hits += 1
             self.player.update_accuracy()
         elif pygame.sprite.groupcollide(self.player_bullet_group, self.chest_group, True,
                                         True):  # ie kill bullet and kill chest
             self.chest_hit_sound.play()
             self.score += 500
             self.player.boost = True
-            self.player.hits+=1
+            self.player.hits += 1
             self.player.update_accuracy()
-        
+
         elif pygame.sprite.groupcollide(self.player_bullet_group, self.love_heart_group, True,
                                         True):  # ie kill bullet and kill heart
             self.heart_hit_sound.play()
             self.player.lives += 1
-            self.player.hits+=1
+            self.player.hits += 1
             self.player.update_accuracy()
-
-        
 
         # See if player has collided with any bullet in the alien bullet group
         if pygame.sprite.spritecollide(self.player, self.alien_bullet_group, True):
@@ -188,7 +180,7 @@ class Game():
         # start a new round
         # Create a grid of alliens, 11 columns and 5 rows
         random_column = random.randint(1, 10)
-        love_heart=Love_Heart(width+10, 10, self.round_number, self.love_heart_bullet_group)
+        love_heart = Love_Heart(width + 10, 10, self.round_number, self.love_heart_bullet_group)
         self.love_heart_group.add(love_heart)
         for i in range(10):
             for j in range(5):
@@ -201,8 +193,6 @@ class Game():
                     alien = Alien(64 + i * 64, 64 + 64 * j, self.round_number,
                                   self.alien_bullet_group)  # make the velocity speed up as the rounds go by
                     self.alien_group.add(alien)
-
-        
 
         # Pause the game and prompt the user to start
         self.new_round_sound.play()
@@ -275,9 +265,9 @@ class Game():
         self.player.lives = 5
         self.player.boost = False
         self.player.boost_timer = FPS * 3
-        self.player.hits=0
-        self.player.accuracy=0.0
-        self.player.attempts=0
+        self.player.hits = 0
+        self.player.accuracy = 0.0
+        self.player.attempts = 0
 
         # Empty groups
         self.alien_group.empty()
@@ -304,21 +294,16 @@ class Player(pygame.sprite.Sprite):  # use the sprite.Sprite as you have to inhe
         self.rect = self.image.get_rect()
         self.rect.centerx = width // 2
         self.rect.bottom = height  # so positioning the ship in the center at the bottom of the screen.
-
         self.lives = 5
         self.velocity = 8
-
         self.bullet_group = bullet_group
-
         self.boost = False
         self.boost_timer = FPS * BOOST_TIME_IN_SECS
         self.shoot_sound_boost = pygame.mixer.Sound("laser_fire.mp3")
         self.shoot_sound_normal = pygame.mixer.Sound("player_fire.wav")
-
-        self.accuracy=0.0
-        self.hits=0
-        self.attempts=0
-
+        self.accuracy = 0.0
+        self.hits = 0
+        self.attempts = 0
 
     def update(self):
         # update the player
@@ -337,7 +322,7 @@ class Player(pygame.sprite.Sprite):  # use the sprite.Sprite as you have to inhe
             self.boost_timer = FPS * BOOST_TIME_IN_SECS
 
     def fire(self):
-        self.attempts+=1
+        self.attempts += 1
         self.update_accuracy()
         # Fire a bullet
         if self.boost:
@@ -346,12 +331,12 @@ class Player(pygame.sprite.Sprite):  # use the sprite.Sprite as you have to inhe
             self.shoot_sound_normal.play()
         PlayerBullet(self.rect.centerx, self.rect.top, self.bullet_group,
                      self.boost)  # fire from the top of the ship. We are using the Player Bullet class and have to put in all the neccessary inputs.
-        
-    def update_accuracy(self):    #Making a function seemed like the easiest way to calculate and update accuracy
+
+    def update_accuracy(self):  # Making a function seemed like the easiest way to calculate and update accuracy
         if self.attempts > 0:
-            self.accuracy = round((self.hits / self.attempts) * 100,1) 
+            self.accuracy = round((self.hits / self.attempts) * 100, 1)
         else:
-            self.accuracy = 0   #make sure that you don't just get//0 
+            self.accuracy = 0  # make sure that you don't just get//0
 
     def reset(self):
         # Reset the players position
@@ -371,23 +356,19 @@ class Alien(pygame.sprite.Sprite):  # use the sprite.Sprite as you have to inher
         self.image = pygame.transform.scale(self.image, alien_size)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-
         self.starting_x = x  # This aims to make resetting the aliens alot easier.
         self.starting_y = y
-
         self.direction = 1  # Positive 1 is moving to the right, -1 is moving to the left.
         self.velocity = velocity
         self.bullet_group = bullet_group
-
         self.shoot_sound = pygame.mixer.Sound("alien_fire.wav")
 
-        
     def update(self):
         # update the alien
         self.rect.x += self.direction * self.velocity  # ie left or right and then velocity
 
         # Randomly fire a bullet
-        if random.randint(0, 3000) > (2995)+0.06*len(my_alien_group) and len(my_alien_bullet_group) < 3:  
+        if random.randint(0, 3000) > (2995) + 0.06 * len(my_alien_group) and len(my_alien_bullet_group) < 3:
             # When there are less aliens, the probability of shooting increases slightly. This probably isn't the most optimal way of doing it. I also make sure there are max 3 bullets at once fron the aliens. 
             self.fire()
 
@@ -411,18 +392,16 @@ class Chest(Alien):
         self.image = pygame.transform.scale(self.image, chest_size)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-
         self.starting_x = x  # This aims to make resetting the aliens alot easier.
         self.starting_y = y
-
         self.direction = 1  # Positive 1 is moving to the right, -1 is moving to the left.
         self.velocity = velocity
         self.bullet_group = bullet_group
-
         self.shoot_sound = pygame.mixer.Sound("alien_fire.wav")
 
     def fire(self):
         pass
+
 
 class Love_Heart(Alien, pygame.sprite.Sprite):
     # A class to model a love heart which will give the player an extra life 
@@ -433,25 +412,22 @@ class Love_Heart(Alien, pygame.sprite.Sprite):
         heart_size = (100, 100)  # resizing the heart
         self.image = pygame.transform.scale(self.image, heart_size)
         self.rect = self.image.get_rect()
-        self.rect.x = width-100  # Initial x position
+        self.rect.x = width - 100  # Initial x position
         self.rect.y = 75  # Initial y position
         self.time = 0  # Initialize time to control oscillation
         self.amplitude = 75  # Oscillation amplitude (height of the sine wave)
         self.frequency = 0.05  # Oscillation frequency (controls speed of the sine wave)
-
         self.starting_x = x  # This aims to make resetting the aliens alot easier.
         self.starting_y = y
-
-       
-        self.velocity = 1      # choosing to be very kind and making the heart speed consistent even when the rounds progress.
-        self.bullet_group = bullet_group  
+        self.velocity = 1  # choosing to be very kind and making the heart speed consistent even when the rounds progress.
+        self.bullet_group = bullet_group
 
     def update(self):
         self.oscillate()
 
     def oscillate(self):
         # Update the x position using a sine wave for oscillation
-        self.rect.x -= self.velocity #move at a different rate compared to the aliens
+        self.rect.x -= self.velocity  # move at a different rate compared to the aliens
         self.rect.y = 200 + self.amplitude * math.sin(self.time)
         self.time += self.frequency  # Increment time to create oscillation
 
@@ -471,7 +447,6 @@ class PlayerBullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.centery = y
-
         self.velocity = 10
         bullet_group.add(self)
 
@@ -499,7 +474,6 @@ class AlienBullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.centery = y
-
         self.velocity = 10
         bullet_group.add(self)
 
@@ -517,7 +491,7 @@ class AlienBullet(pygame.sprite.Sprite):
 my_player_bullet_group = pygame.sprite.Group()
 my_alien_bullet_group = pygame.sprite.Group()
 my_chest_bullet_group = pygame.sprite.Group()
-my_love_heart_bullet_group=pygame.sprite.Group()
+my_love_heart_bullet_group = pygame.sprite.Group()
 
 # Create a player group and player object
 my_player_group = pygame.sprite.Group()
@@ -530,11 +504,12 @@ my_alien_group = pygame.sprite.Group()
 # Create a chest group. Will add Chest objects via the game's start new round method.
 my_chest_group = pygame.sprite.Group()
 
-#Create a love heart group
-my_love_heart_group=pygame.sprite.Group()
+# Create a love heart group
+my_love_heart_group = pygame.sprite.Group()
 
 # Create a game object
-my_game = Game(my_player, my_alien_group, my_chest_group,my_love_heart_group, my_player_bullet_group, my_alien_bullet_group,
+my_game = Game(my_player, my_alien_group, my_chest_group, my_love_heart_group, my_player_bullet_group,
+               my_alien_bullet_group,
                my_chest_bullet_group, my_love_heart_bullet_group)
 my_game.start_new_round()
 
@@ -579,8 +554,6 @@ while running:
     my_love_heart_bullet_group.update()
     my_love_heart_bullet_group.draw(display_surface)
 
-
-
     # Update and draw object
     my_game.update()
     my_game.draw()
@@ -591,4 +564,3 @@ while running:
 
 # End the game
 pygame.quit()
-
