@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, random, math
 
 # Initialise pygame
 pygame.init()
@@ -12,7 +12,7 @@ pygame.display.set_caption("Space Invaders")
 # Setting the working directory
 import os
 
-os.chdir('Your Working directory')
+os.chdir('C:/Users/Meredith/PycharmProjects/Space Invaders')
 
 # Set Frames per second and clock
 FPS = 60
@@ -25,7 +25,7 @@ BOOST_TIME_IN_SECS = 4
 class Game():
     # A class to help control and update gameplay
 
-    def __init__(self, player, alien_group, chest_group, player_bullet_group, alien_bullet_group, chest_bullet_group):
+    def __init__(self, player, alien_group, chest_group, love_heart_group, player_bullet_group, alien_bullet_group, chest_bullet_group, love_heart_bullet_group):
         # initialise the game
         # Set game values
         self.round_number = 1
@@ -33,9 +33,11 @@ class Game():
         self.player = player
         self.alien_group = alien_group
         self.chest_group = chest_group
+        self.love_heart_group=love_heart_group
         self.player_bullet_group = player_bullet_group
         self.alien_bullet_group = alien_bullet_group
         self.chest_bullet_group = chest_bullet_group
+        self.love_heart_bullet_group=love_heart_bullet_group
 
 
         # Set sounds and music
@@ -44,6 +46,7 @@ class Game():
         self.alien_hit_sound = pygame.mixer.Sound("alien_hit.wav")
         self.player_hit_sound = pygame.mixer.Sound("player_hit.wav")
         self.chest_hit_sound = pygame.mixer.Sound("bonus_acquired.wav")
+        self.heart_hit_sound=pygame.mixer.Sound("heart_wav.wav")
 
         # Set font
         self.font = pygame.font.SysFont('candara', 32, bold=10)
@@ -132,6 +135,10 @@ class Game():
             if chest.rect.bottom >= height - 50:
                 chest.kill()
 
+    
+    
+    
+
     def check_collisions(self):
         # check for collisions
         # See if any bullet in the player bullet group hits an alien in the alien group
@@ -148,6 +155,15 @@ class Game():
             self.player.boost = True
             self.player.hits+=1
             self.player.update_accuracy()
+        
+        elif pygame.sprite.groupcollide(self.player_bullet_group, self.love_heart_group, True,
+                                        True):  # ie kill bullet and kill heart
+            self.heart_hit_sound.play()
+            self.player.lives += 1
+            self.player.hits+=1
+            self.player.update_accuracy()
+
+        
 
         # See if player has collided with any bullet in the alien bullet group
         if pygame.sprite.spritecollide(self.player, self.alien_bullet_group, True):
@@ -172,7 +188,9 @@ class Game():
         # start a new round
         # Create a grid of alliens, 11 columns and 5 rows
         random_column = random.randint(1, 10)
-        for i in range(11):
+        love_heart=Love_Heart(width+10, 10, self.round_number, self.love_heart_bullet_group)
+        self.love_heart_group.add(love_heart)
+        for i in range(10):
             for j in range(5):
                 if j == 0 and i == random_column - 1:
                     chest = Chest(64 + i * 64, 64 + 64 * j, self.round_number,
@@ -183,6 +201,8 @@ class Game():
                     alien = Alien(64 + i * 64, 64 + 64 * j, self.round_number,
                                   self.alien_bullet_group)  # make the velocity speed up as the rounds go by
                     self.alien_group.add(alien)
+
+        
 
         # Pause the game and prompt the user to start
         self.new_round_sound.play()
@@ -262,9 +282,11 @@ class Game():
         # Empty groups
         self.alien_group.empty()
         self.chest_group.empty()
+        self.love_heart_group.empty()
         self.alien_bullet_group.empty()
         self.chest_bullet_group.empty()
         self.player_bullet_group.empty()
+        self.love_heart_bullet_group.empty()
 
         # Start a new game
         self.start_new_round()
@@ -402,6 +424,37 @@ class Chest(Alien):
     def fire(self):
         pass
 
+class Love_Heart(Alien, pygame.sprite.Sprite):
+    # A class to model a love heart which will give the player an extra life 
+
+    def __init__(self, x, y, velocity, bullet_group):
+        super().__init__(x, y, velocity, bullet_group)
+        self.image = pygame.image.load("Love_Heart.png")
+        heart_size = (100, 100)  # resizing the heart
+        self.image = pygame.transform.scale(self.image, heart_size)
+        self.rect = self.image.get_rect()
+        self.rect.x = width-100  # Initial x position
+        self.rect.y = 75  # Initial y position
+        self.time = 0  # Initialize time to control oscillation
+        self.amplitude = 75  # Oscillation amplitude (height of the sine wave)
+        self.frequency = 0.05  # Oscillation frequency (controls speed of the sine wave)
+
+        self.starting_x = x  # This aims to make resetting the aliens alot easier.
+        self.starting_y = y
+
+       
+        self.velocity = 1      # choosing to be very kind and making the heart speed consistent even when the rounds progress.
+        self.bullet_group = bullet_group  
+
+    def update(self):
+        self.oscillate()
+
+    def oscillate(self):
+        # Update the x position using a sine wave for oscillation
+        self.rect.x -= self.velocity #move at a different rate compared to the aliens
+        self.rect.y = 200 + self.amplitude * math.sin(self.time)
+        self.time += self.frequency  # Increment time to create oscillation
+
 
 class PlayerBullet(pygame.sprite.Sprite):
     # A class to model a bullet fired by the player
@@ -464,6 +517,7 @@ class AlienBullet(pygame.sprite.Sprite):
 my_player_bullet_group = pygame.sprite.Group()
 my_alien_bullet_group = pygame.sprite.Group()
 my_chest_bullet_group = pygame.sprite.Group()
+my_love_heart_bullet_group=pygame.sprite.Group()
 
 # Create a player group and player object
 my_player_group = pygame.sprite.Group()
@@ -476,9 +530,12 @@ my_alien_group = pygame.sprite.Group()
 # Create a chest group. Will add Chest objects via the game's start new round method.
 my_chest_group = pygame.sprite.Group()
 
+#Create a love heart group
+my_love_heart_group=pygame.sprite.Group()
+
 # Create a game object
-my_game = Game(my_player, my_alien_group, my_chest_group, my_player_bullet_group, my_alien_bullet_group,
-               my_chest_bullet_group)
+my_game = Game(my_player, my_alien_group, my_chest_group,my_love_heart_group, my_player_bullet_group, my_alien_bullet_group,
+               my_chest_bullet_group, my_love_heart_bullet_group)
 my_game.start_new_round()
 
 # The main game loop
@@ -510,11 +567,19 @@ while running:
     my_chest_group.update()
     my_chest_group.draw(display_surface)
 
+    my_love_heart_group.update()
+    my_love_heart_group.draw(display_surface)
+
     my_alien_bullet_group.update()
     my_alien_bullet_group.draw(display_surface)
 
     my_chest_bullet_group.update()
     my_chest_bullet_group.draw(display_surface)
+
+    my_love_heart_bullet_group.update()
+    my_love_heart_bullet_group.draw(display_surface)
+
+
 
     # Update and draw object
     my_game.update()
@@ -526,3 +591,4 @@ while running:
 
 # End the game
 pygame.quit()
+
