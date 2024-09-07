@@ -547,6 +547,7 @@ my_game = Game(my_player, my_alien_group, my_chest_group,my_love_heart_group, my
                my_chest_bullet_group, my_love_heart_bullet_group)
 my_game.start_new_round()
 
+start_time=pygame.time.get_ticks()      #Outside the game loop
 # The main game loop
 running = True
 while running:
@@ -576,8 +577,13 @@ while running:
     my_chest_group.update()
     my_chest_group.draw(display_surface)
 
-    my_love_heart_group.update()
-    my_love_heart_group.draw(display_surface)
+    
+    cycle_duration=5000   #5 seconds on or off, hard to get this value quite right
+    current_time=pygame.time.get_ticks()    #this gets the current time 
+    time_passed=(current_time-start_time)%(cycle_duration)    #this creates a repeated cycle of 10 seconds
+    if time_passed<cycle_duration/2:    #if we are in the first half of the cycle, draw and update the love heart 
+        my_love_heart_group.draw(display_surface)
+        my_love_heart_group.update()
 
     my_alien_bullet_group.update()
     my_alien_bullet_group.draw(display_surface)
